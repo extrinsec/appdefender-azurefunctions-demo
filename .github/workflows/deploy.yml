@@ -1,0 +1,44 @@
+name: appdefender on Azure Functions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - uses: serverless/github-action@v3.1
+        with:
+          args: -c "cd ./nodejs && serverless plugin install --name serverless-azure-functions &&
+            serverless deploy && serverless invoke --function nodejs"
+          entrypoint: /bin/sh
+        env:
+          ES_LICENSE_KEY: ${{ secrets.ES_LICENSE_KEY }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - uses: serverless/github-action@v3.1
+        with:
+          args: -c "cd ./python && serverless plugin install --name serverless-azure-functions &&
+            serverless deploy && serverless invoke --function python"
+          entrypoint: /bin/sh
+        env:
+          ES_LICENSE_KEY: ${{ secrets.ES_LICENSE_KEY }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

@@ -1,0 +1,24 @@
+service: appdefender-on-azfx-python
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-azure-functions
+
+provider:
+  name: azure
+  region: EastUS
+  os: linux
+  runtime: python3.8
+  environment:
+    ES_POLICY_GROUP_NAME: ${env:ES_POLICY_GROUP_NAME, 'observeAll.ability'}
+    ES_LICENSE_KEY: '${env:ES_LICENSE_KEY}'
+
+functions:
+  python:
+    handler: main.demo_python
+    events:
+      - http: true
+        methods:
+         - GET
+        authLevel: anonymous

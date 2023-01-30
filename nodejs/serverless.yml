@@ -1,0 +1,24 @@
+service: appdefender-on-azfx-nodejs
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-azure-functions
+
+provider:
+  name: azure
+  region: EastUS
+  os: linux
+  runtime: nodejs14
+  environment:
+    ES_POLICY_GROUP_NAME: ${env:ES_POLICY_GROUP_NAME, 'observeAll.ability'}
+    ES_LICENSE_KEY: '${env:ES_LICENSE_KEY}'
+
+functions:
+  nodejs:
+    handler: index.demo_nodejs
+    events:
+      - http: true
+        methods:
+         - GET
+        authLevel: anonymous
